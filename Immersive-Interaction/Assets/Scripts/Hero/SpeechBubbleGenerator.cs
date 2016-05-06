@@ -79,7 +79,7 @@ public class SpeechBubbleGenerator : MonoBehaviour {
 		Vector2 oldSize = backgroundTransform.sizeDelta;
 		backgroundTransform.sizeDelta = new Vector2(oldSize.x, 35 * lines + 60);
 		Vector2 oldSize2 = dialogueTransform.sizeDelta;
-		dialogueTransform.sizeDelta = new Vector2(oldSize2.x, 35 * lines);
+		dialogueTransform.sizeDelta = new Vector2(oldSize2.x, 30 * lines);
 
 		/*
 		Vector3 oldPos = backgroundTransform.anchoredPosition3D;

@@ -7,10 +7,9 @@ public class HeroScript : MonoBehaviour {
 	public SpeechBubbleGenerator speechBubbleScript;
 	private Rigidbody rbody;
 	public GameObject environment;
+	public EventManagerScript eventManager;
+	public GameObject respawnArea;
 
-	// event that's called for when you enter a new room
-	public delegate void EnterRoom(GameObject room);
-	public static event EnterRoom OnRoomEnter;
 
 	// Use this for initialization
 	void Start () {
@@ -18,11 +17,14 @@ public class HeroScript : MonoBehaviour {
 		speechBubbleScript = speechBubble.GetComponent<SpeechBubbleGenerator>();
 		rbody = GetComponent<Rigidbody>();
 		environment = GameObject.FindGameObjectWithTag("Environment");
+		eventManager = environment.GetComponent<EventManagerScript>();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-		
+		if (Input.GetKeyDown(KeyCode.R)){
+			PlayerDeath();
+		}
 	}
 
 	// speaks the given text
@@ -46,9 +48,7 @@ public class HeroScript : MonoBehaviour {
 
 	void OnTriggerStay(Collider other){
 		if (other.gameObject.tag == "RoomTrigger"){
-			if (OnRoomEnter != null){
-				OnRoomEnter(other.gameObject);
-			}
+			eventManager.enterRoom(other.gameObject);
 		}
 	}
 
@@ -61,5 +61,32 @@ public class HeroScript : MonoBehaviour {
 				trigger.triggered = true;
 			}
 		}
+		else if (other.gameObject.tag == "Respawn"){
+			respawnArea = other.gameObject;
+		}
+		else if (other.gameObject.tag == "Finish"){
+			// game is done
+
+		}
+		else if (other.gameObject.tag == "Danger"){
+			PlayerDeath();
+		}
+	}
+
+	void OnCollisionEnter(Collision c){
+		if (c.gameObject.tag == "Danger"){
+			PlayerDeath();
+		}
+	}
+
+	public void PlayerDeath(){
+		eventManager.playerDeath(respawnArea);
+		//StartCoroutine(Suicide());
+		Destroy(transform.parent.gameObject);
+	}
+
+	IEnumerator Suicide(){
+		yield return new WaitForSeconds(0.5f);
+		Destroy(transform.parent.gameObject);
 	}
 }

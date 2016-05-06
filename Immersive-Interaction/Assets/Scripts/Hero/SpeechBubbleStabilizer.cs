@@ -14,6 +14,6 @@ public class SpeechBubbleStabilizer : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		// lock the position of speech bubble to model
-		speechBubble.transform.position = model.transform.position + new Vector3(0,0.07f,0);
+		speechBubble.transform.position = model.transform.position + new Vector3(0,0.7f,0);
 	}
 }

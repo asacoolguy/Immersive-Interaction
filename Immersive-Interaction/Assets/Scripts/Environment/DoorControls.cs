@@ -4,79 +4,90 @@ using LMWidgets;
 using Leap;
 
 public class DoorControls : BatteryControlledObject {
-	private bool open = false;
+	public bool currentOpen = false;
+	public bool nextOpen = false;
+
 	public float openTime = 1f;
-	public float openDistance = 0.04f;
+	public float openDistance = -1;
 
-	public GameObject leftDoor;
-	public GameObject rightDoor;
-	public GameObject light;
-	public Material activeLight;
-	public Material inactiveLight;
+	public GameObject door;
+	public GameObject activeLight;
+	public GameObject inactiveLight;
 
+	public AudioSource source;
+	public float threshold = 0.02f;
 
-	private float leftClosedPos;
-	private float rightClosedPos;
-	private float leftOpenPos;
-	private float rightOpenPos;
+	private float closedPos;
+	private float openPos;
+
+	private bool playedErrorNoise = false;
+	public AudioClip errorSound;
 
 	void Start(){
-		leftDoor = transform.FindChild("left_door").gameObject;
-		rightDoor = transform.FindChild("right_door").gameObject;
-		light = transform.FindChild("Light").gameObject;
+		door = transform.FindChild("DoorObj").gameObject;
+		activeLight = transform.FindChild("DoorLight_Active").gameObject;
+		inactiveLight = transform.FindChild("DoorLight_Inactive").gameObject;
+		source = GetComponent<AudioSource>();
 
-		leftClosedPos = leftDoor.transform.position.z;
-		rightClosedPos = rightDoor.transform.position.z;
-		leftOpenPos = leftClosedPos + openDistance;
-		rightOpenPos = rightClosedPos - openDistance;
+		closedPos = transform.position.y;
+		openPos = closedPos + openDistance;
 	}
 
 	void Update()	{
+		closedPos = transform.position.y;
+		openPos = closedPos + openDistance;
+
 		// opens and closes the door based
 		if (activated){
-			if (open){
+			if (currentOpen){
 				// if doors are not at open pos yet
-				if (Mathf.Abs(leftDoor.transform.position.z - leftOpenPos) > 0.005f){
-					leftDoor.transform.Translate(new Vector3(0,0, openDistance * Time.deltaTime / openTime));
-					rightDoor.transform.Translate(new Vector3(0,0, -openDistance * Time.deltaTime / openTime));
+				if (Mathf.Abs(door.transform.position.y - openPos) > threshold){
+					door.transform.Translate(new Vector3(0,openDistance * Time.deltaTime / openTime, 0));
 				}
 				else{
-					leftDoor.transform.position = new Vector3(leftDoor.transform.position.x, leftDoor.transform.position.y, leftOpenPos);
-					rightDoor.transform.position = new Vector3(rightDoor.transform.position.x, rightDoor.transform.position.y, rightOpenPos);
+					door.transform.position = new Vector3(door.transform.position.x, openPos, door.transform.position.z);
 				}
 			}
 			else{
 				// if doors are not at closed pos yet
-				if (Mathf.Abs(leftDoor.transform.position.z - leftClosedPos) > 0.005f){
-					leftDoor.transform.Translate(new Vector3(0,0, -openDistance * Time.deltaTime / openTime));
-					rightDoor.transform.Translate(new Vector3(0,0, openDistance * Time.deltaTime / openTime));
+				if (Mathf.Abs(door.transform.position.y - closedPos) > threshold){
+					door.transform.Translate(new Vector3(0, -openDistance * Time.deltaTime / openTime, 0));
 				}
 				else{
-					leftDoor.transform.position = new Vector3(leftDoor.transform.position.x, leftDoor.transform.position.y, leftClosedPos);
-					rightDoor.transform.position = new Vector3(rightDoor.transform.position.x, rightDoor.transform.position.y, rightClosedPos);
+					door.transform.position = new Vector3(door.transform.position.x, closedPos, door.transform.position.z);
 				}
 			}
 		}
 
 		// controls the color of the light
-		if (activated){
-			light.GetComponent<Renderer>().material = activeLight;
-		}
-		else{
-			light.GetComponent<Renderer>().material = inactiveLight;
-		}
-
+		activeLight.SetActive(activated);
+		inactiveLight.SetActive(!activated);
 	}
 
-	void OnTriggerEnter(Collider c){
+	void OnTriggerStay(Collider c){
 		if (activated && c.gameObject.tag == "Hero"){
-			open = true;
+			nextOpen = true;
+			if (!currentOpen){
+				source.Play();
+			}
+			currentOpen = nextOpen;
+		}
+		else if (activated == false && c.gameObject.tag == "Hero" && playedErrorNoise == false){
+			source.PlayOneShot(errorSound);
+			playedErrorNoise = true;
 		}
 	}
 
 	void OnTriggerExit(Collider c){
 		if (activated && c.gameObject.tag == "Hero"){
-			open = false;
+			nextOpen = false;
+			if (currentOpen){
+				source.Play();
+			}
+			currentOpen = nextOpen;
+		}
+		else if (activated == false && c.gameObject.tag == "Hero"){
+			playedErrorNoise = false;
 		}
 	}
 }

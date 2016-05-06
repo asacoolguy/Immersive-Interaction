@@ -5,6 +5,8 @@ Project("{96BFC36A-9BD9-F160-C1A9-E54F5D8637B2}") = "Immersive-Interaction", "As
 EndProject
 Project("{96BFC36A-9BD9-F160-C1A9-E54F5D8637B2}") = "Immersive-Interaction", "Assembly-CSharp-Editor.csproj", "{52770E51-211F-A1FE-65C3-E91FCA070D6C}"
 EndProject
+Project("{96BFC36A-9BD9-F160-C1A9-E54F5D8637B2}") = "Immersive-Interaction", "Assembly-UnityScript.unityproj", "{5D894B06-BDE8-AC7C-1A46-1105194537DA}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -19,6 +21,10 @@ Global
 		{52770E51-211F-A1FE-65C3-E91FCA070D6C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{52770E51-211F-A1FE-65C3-E91FCA070D6C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{52770E51-211F-A1FE-65C3-E91FCA070D6C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5D894B06-BDE8-AC7C-1A46-1105194537DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5D894B06-BDE8-AC7C-1A46-1105194537DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5D894B06-BDE8-AC7C-1A46-1105194537DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5D894B06-BDE8-AC7C-1A46-1105194537DA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

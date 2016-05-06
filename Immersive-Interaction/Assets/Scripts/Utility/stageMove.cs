@@ -25,5 +25,11 @@ public class stageMove : MonoBehaviour {
 		else if(Input.GetKey("d")){
 			transform.position = new Vector3(p.x + moveSpeed, p.y, p.z);
 		}
+		else if(Input.GetKey("q")){
+			transform.position = new Vector3(p.x, p.y, p.z + moveSpeed);
+		}
+		else if(Input.GetKey("e")){
+			transform.position = new Vector3(p.x, p.y, p.z - moveSpeed);
+		}
 	}
 }

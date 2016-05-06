@@ -40,20 +40,20 @@ public class BoxSelection : MonoBehaviour {
 				Vector3 direction = position.normalized;
 
 				//sphere.SetActive(false);
-				foreach(Transform child in transform){
+				foreach(Transform child in transform.Find("cubes")){
 					child.gameObject.GetComponent<CubeTranslation>().Deselect();
 				}
 
 				//bit shift the index of the layer 8 to get a bit mask
-				int layerMask = 1 << 8;
+				int layerMask = 1 << 12;
 
 				RaycastHit hit;
 				if (Physics.Raycast(position, direction, out hit, Mathf.Infinity, layerMask)){
 					//sphere.SetActive(true);
 					//sphere.transform.position = hit.point;
-					//print(hit.collider.gameObject.name);
+					print(hit.collider.gameObject.name);
 					//print(layerMask);
-					hit.collider.gameObject.GetComponent<CubeTranslation>().Toggle();
+					hit.collider.gameObject.GetComponent<CubeTranslation>().Select();
 				}
 			}
 
